@@ -1,6 +1,6 @@
 library(robustbase)
 library(maxLik)
-library(smco)
+#library(smco)
 
   
 #  ++++++ <Generation and density for unconditional K model> ++++++
