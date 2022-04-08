@@ -1,6 +1,5 @@
-setwd("C:/Users/pedro/Dropbox/ARTIGO_REGRESSAO_K/")
-source("Codes/func_MEIJER.R")
-source("Codes/Functions_RegK.R")
+source("func_MEIJER.R")
+source("Functions_RegK.R")
 
 
 library(nortest)
