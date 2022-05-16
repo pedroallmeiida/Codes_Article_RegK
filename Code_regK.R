@@ -96,31 +96,18 @@ calculate.r2 <-function( Y, X, method = method, L  ){
   return( R2 = c( r2_K = r2.k,  r2_norm = r2_ajuste_norm , r2_gamma = r2_ajuste_gamma  ) )
 }
 
-### load SAR image
-load("SanFranciscoImage_150_150.Rdata")
+### Datasets: urban, ocean and forest
 
+dados_urban = read.csv(file = "data_urban.csv", sep = ",")
+dados_ocean = read.csv(file = "data_ocean.csv", sep = ",")
+dados_forest = read.csv(file = "data_forest.csv", sep = ",")
 
-M.HH = t(apply(matrix( Re(ImgMP_Sim[,,1]),ncol=dim(ImgMP_Sim)[2] ), 2, rev))
-M.HV = t(apply(matrix( Re(ImgMP_Sim[,,2]),ncol=dim(ImgMP_Sim)[2] ), 2, rev))
-M.VV = t(apply(matrix( Re(ImgMP_Sim[,,3]),ncol=dim(ImgMP_Sim)[2] ), 2, rev))
-
-## channels
-HH = M.HH[-c(1:3, (dim(M.HH)[1]-2):dim(M.HH)[1]),-c(1:3, (dim(M.HH)[2]-2):dim(M.HH)[2])]
-HV = M.HV[-c(1:3, (dim(M.HV)[1]-2):dim(M.HV)[1]),-c(1:3, (dim(M.HV)[2]-2):dim(M.HV)[2])]
-VV = M.VV[-c(1:3, (dim(M.VV)[1]-2):dim(M.VV)[1]),-c(1:3, (dim(M.VV)[2]-2):dim(M.VV)[2])]
-
-##### urban region
-
-
-a=136:142 ; b = 42:48
-urban_VV = c( t(M.VV[a,b]) )
-urban_HH = c( t(M.HH[a,b]) )
-urban_HV = c( t(M.HV[a,b]) )
 
 ### Regression K ----
 
 
-ajuste_urban_VV_K = glm.K(urban_VV, urban_HV, method = "NM", L=4 )
+### Model Fit Urban: Y_VV ~ X_HV 
+ajuste_urban_VV_K = glm.K(dados_urban$urban_VV, dados_urban$urban_HV, method = "NM", L=4 )
 
 mu.hat_urban_VV_K = ajuste_urban_VV_K$fitted.values
 dados = data.frame( urban_VV, urban_HV ,mu.hat= mu.hat_urban_VV_K)
@@ -128,6 +115,38 @@ ggplot(data = dados, aes(x =  urban_HV, y = urban_VV)) +
   labs(x="HV", y="VV") +
   geom_point(color='black') +
   geom_line(color='red', aes(x= urban_HV, y=mu.hat))+
+  theme_minimal()+
+  theme(legend.position="top",
+        legend.key.size = unit(1, "lines"))+
+  theme(axis.text=element_text(size=15),axis.title=element_text(size=15,face="bold"),plot.title = element_text(size = 15, face = "bold"),legend.title=element_text(size=15), legend.text=element_text(size=15))
+
+
+
+### Model Fit forest: Y_VV ~ X_HV 
+ajuste_forest_VV_K = glm.K(dados_forest$forest_VV, dados_forest$forest_HV, method = "NM", L=4 )
+
+mu.hat_forest_VV_K = ajuste_forest_VV_K$fitted.values
+dados = data.frame( forest_VV, forest_HV ,mu.hat = mu.hat_forest_VV_K)
+ggplot( data = dados, aes(x =  forest_HV, y = forest_VV) ) + 
+  labs(x="HV", y="VV") +
+  geom_point(color='black') +
+  geom_line(color='red', aes(x= forest_HV, y=mu.hat))+
+  theme_minimal()+
+  theme(legend.position="top",
+        legend.key.size = unit(1, "lines"))+
+  theme(axis.text=element_text(size=15),axis.title=element_text(size=15,face="bold"),plot.title = element_text(size = 15, face = "bold"),legend.title=element_text(size=15), legend.text=element_text(size=15))
+
+
+
+### Model Fit ocean: Y_VV ~ X_HV 
+ajuste_ocean_VV_K = glm.K(dados_ocean$ocean_VV, dados_ocean$ocean_HV, method = "NM", L=4 )
+
+mu.hat_ocean_VV_K = ajuste_ocean_VV_K$fitted.values
+dados = data.frame( ocean_VV, ocean_HV , mu.hat = mu.hat_ocean_VV_K)
+ggplot(data = dados, aes(x =  ocean_HV, y = ocean_VV)) + 
+  labs(x="HV", y="VV") +
+  geom_point(color='black') +
+  geom_line(color='red', aes(x= ocean_HV, y=mu.hat))+
   theme_minimal()+
   theme(legend.position="top",
         legend.key.size = unit(1, "lines"))+
