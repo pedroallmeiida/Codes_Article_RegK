@@ -1,11 +1,11 @@
 library(reticulate)
 
-### Instale essas bibliotecas antes de rodar
+### Install these libraries before running
 #py_install("pandas")
 #py_install("mpmath")
 
-## diretorio onde o seu python está instalado
+## directory where your python is installed
 use_python("C:\\Users\\pedro\\AppData\\Local\\r-miniconda\\envs\\r-python\\python.exe")
 
-### Carregue o arquivo python
+### Load the python file
 source_python("C:/Users/pedro/Dropbox/ARTIGO_REGRESSAO_K/Codes/meijer.py" , convert = TRUE )
